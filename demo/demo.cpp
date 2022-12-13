@@ -4,6 +4,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "imgui_styles.h"
+
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -14,13 +16,20 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char* description) {
+int WindowSize[2] = { 1200, 800 };
+
+static void glfw_ErrorCb(int error, const char* description) {
 	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+}
+
+static void glfwWindowSizeCb(GLFWwindow* window, int width, int height) {
+	WindowSize[0] = width;
+	WindowSize[1] = height;
 }
 
 int main(int argc, char** argv) {
 	// Setup window
-	glfwSetErrorCallback(glfw_error_callback);
+	glfwSetErrorCallback(glfw_ErrorCb);
 	if (!glfwInit()) return 1;
 
 	// Decide GL+GLSL versions
@@ -46,8 +55,10 @@ int main(int argc, char** argv) {
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WindowSize[0], WindowSize[1], "ImGooeyStyles Demo", NULL, NULL);
 	if (window == NULL) return 1;
+
+	glfwSetWindowSizeCallback(window, glfwWindowSizeCb);
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
@@ -55,13 +66,16 @@ int main(int argc, char** argv) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.IniFilename = NULL;
+	io.LogFilename = NULL;
+
+	ImGuiStyle& style = ImGui::GetStyle();
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	bool show_demo_window = true;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
@@ -69,7 +83,23 @@ int main(int argc, char** argv) {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::ShowDemoWindow(&show_demo_window);
+		ImGui::SetNextWindowPos({ 0, 0 });
+		ImGui::SetNextWindowSize({ (float)WindowSize[0] / 2 - 200, (float)WindowSize[1] });
+		ImGui::Begin("Style Editor", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+		if (ImGui::Button("Save Configuration")) {
+			ImGui::SaveStylesTo("imgui_styles.ini");
+			printf("Saved Config To imgui_styles.ini...\n");
+		}
+
+		ImGui::ShowStyleEditor(&style);
+		ImGui::End();
+
+		ImGui::Begin("Preview Window");
+		ImGui::ShowDemoWindow(NULL);
+		ImGui::SetWindowPos({ (float)(WindowSize[0] / 2), 50.0f }, ImGuiCond_Once);
+		ImGui::SetWindowSize({ (float)(WindowSize[0] / 2 - 100.0f), (float)(WindowSize[1] - 100) }, ImGuiCond_Once);
+		ImGui::End();
 
 		ImGui::Render();
 		int display_w, display_h;
