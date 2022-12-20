@@ -1,2 +1,2 @@
-*.h      text linguist-language=c         diff=c++
+*.h      text linguist-language=c++       diff=c++
 *.cpp    text linguist-language=c++       diff=c++
