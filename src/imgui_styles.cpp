@@ -5,6 +5,7 @@
 
 #include "imgui_styles.h"
 
+// Related To The Ini Library I've Embedded In This File (Scroll Down)
 #define INI_VERSION "0.1.1"
 typedef struct ini_t ini_t;
 
@@ -225,7 +226,7 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 				style.Colors[i].z = (float)color[2] / 255;
 				style.Colors[i].w = (float)color[3] / 255;
 			}
-		};
+		}
 	}
 
 	ini_free(ini_style);
