@@ -87,6 +87,11 @@ int main(int argc, char** argv) {
 		ImGui::SetNextWindowSize({ (float)WindowSize[0] / 2 - 200, (float)WindowSize[1] });
 		ImGui::Begin("Style Editor", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
+		if (ImGui::Button("Load Configuration")) {
+			ImGui::LoadStyleFrom("imgui_styles.ini");
+			printf("Loaded Config From imgui_styles.ini...\n");
+		}
+
 		if (ImGui::Button("Save Configuration")) {
 			ImGui::SaveStylesTo("imgui_styles.ini");
 			printf("Saved Config To imgui_styles.ini...\n");
