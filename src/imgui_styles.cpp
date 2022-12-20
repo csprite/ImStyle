@@ -107,6 +107,18 @@ IMGUI_API void ImGui::SaveStylesTo(const char* fileName) {
 	WRITE_ImVec2(DisplayWindowPadding);
 	WRITE_ImVec2(DisplaySafeAreaPadding);
 
+	fprintf(fp, "\n[ImGuiColors]\n");
+	for (int i = 0; i < ImGuiCol_COUNT; i++) {
+		const char* name = ImGui::GetStyleColorName(i);
+		int color[4] = {
+			ImClamp(IM_F32_TO_INT8_UNBOUND(style.Colors[i].x), 0, 255),
+			ImClamp(IM_F32_TO_INT8_UNBOUND(style.Colors[i].y), 0, 255),
+			ImClamp(IM_F32_TO_INT8_UNBOUND(style.Colors[i].z), 0, 255),
+			ImClamp(IM_F32_TO_INT8_UNBOUND(style.Colors[i].w), 0, 255)
+		};
+		fprintf(fp, "%s = #%02X%02X%02X%02X\n", name, color[0], color[1], color[2], color[3]);
+	}
+
 	fclose(fp);
 	fp = NULL;
 }
@@ -201,6 +213,20 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 	LOAD_IMVEC2s(style.SelectableTextAlign, SelectableTextAlign);
 	LOAD_IMVEC2s(style.DisplayWindowPadding, DisplayWindowPadding);
 	LOAD_IMVEC2s(style.DisplaySafeAreaPadding, DisplaySafeAreaPadding);
+
+	for (int i = 0; i < ImGuiCol_COUNT; i++) {
+		const char* name = ImGui::GetStyleColorName(i);
+		const char* value = ini_get(ini_style, "ImGuiColors", name);
+		if (value != NULL) {
+			unsigned int color[4] = { 0, 0, 0, 0 };
+			if (sscanf(value[0] == '#' ? value + 1 : value, "%02x%02x%02x%02x", &color[0], &color[1], &color[2], &color[3]) == 4) {
+				style.Colors[i].x = (float)color[0] / 255;
+				style.Colors[i].y = (float)color[1] / 255;
+				style.Colors[i].z = (float)color[2] / 255;
+				style.Colors[i].w = (float)color[3] / 255;
+			}
+		};
+	}
 
 	ini_free(ini_style);
 	ini_style = NULL;
