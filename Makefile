@@ -49,7 +49,7 @@ all: $(bin)
 	$(CXX) --std=$(CXX_STD) $(CXXFLAGS) $(CCFLAGS) -c $< -o $@
 
 $(bin): $(OBJS_CPP)
-	$(CXX) --std=$(CXX_STD) $(OBJS_CPP) $(LFLAGS) -o $@
+	$(CXX) $(OBJS_CPP) $(LFLAGS) -o $@
 
 .PHONY: run
 .PHONY: clean
