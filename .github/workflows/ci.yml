@@ -19,4 +19,11 @@ jobs:
     - name: Build
       run: make all -j4
 
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-linux-x86_64
+        path: ./imgooeystyles_demo
+        if-no-files-found: error
+
 
