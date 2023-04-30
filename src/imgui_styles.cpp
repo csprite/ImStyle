@@ -108,6 +108,11 @@ IMGUI_API void ImGui::SaveStylesTo(const char* fileName) {
 	WRITE_ImVec2(DisplayWindowPadding);
 	WRITE_ImVec2(DisplaySafeAreaPadding);
 
+	#undef WRITE_FLOAT
+	#undef WRITE_ImVec2
+	#undef WRITE_DIRECTION
+	#undef WRITE_BOOLEAN
+
 	fprintf(fp, "\n[ImGuiColors]\n");
 	for (int i = 0; i < ImGuiCol_COUNT; i++) {
 		const char* name = ImGui::GetStyleColorName(i);
@@ -161,6 +166,8 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 	LOAD_FLOAT(CurveTessellationTol);
 	LOAD_FLOAT(CircleTessellationMaxError);
 
+	#undef LOAD_FLOAT
+
 	// Directions
 	#define LOAD_DIRECTION(name) { \
 		const char* str  = ini_get(ini_style, "ImGuiStyles", #name); \
@@ -171,6 +178,7 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 	}
 	LOAD_DIRECTION(WindowMenuButtonPosition);
 	LOAD_DIRECTION(ColorButtonPosition);
+	#undef LOAD_DIRECTION
 
 	// Booleans
 	#define LOAD_BOOLEANS(name) { \
@@ -183,9 +191,9 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 	LOAD_BOOLEANS(AntiAliasedLines);
 	LOAD_BOOLEANS(AntiAliasedLinesUseTex);
 	LOAD_BOOLEANS(AntiAliasedFill);
+	#undef LOAD_BOOLEANS
 
-	#define MAX_BEFORE_COMMA_SIZE 512
-	char BeforeComma[MAX_BEFORE_COMMA_SIZE] = "";
+	char BeforeComma[512] = "";
 
 	#define LOAD_IMVEC2s(var_imvec2, name) { \
 		const char* str = ini_get(ini_style, "ImGuiStyles", #name); \
@@ -213,6 +221,7 @@ IMGUI_API void ImGui::LoadStyleFrom(const char* fileName) {
 	LOAD_IMVEC2s(style.SelectableTextAlign, SelectableTextAlign);
 	LOAD_IMVEC2s(style.DisplayWindowPadding, DisplayWindowPadding);
 	LOAD_IMVEC2s(style.DisplaySafeAreaPadding, DisplaySafeAreaPadding);
+	#undef LOAD_IMVEC2s
 
 	for (int i = 0; i < ImGuiCol_COUNT; i++) {
 		const char* name = ImGui::GetStyleColorName(i);
