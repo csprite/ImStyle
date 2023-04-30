@@ -12,6 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install Dependencies
+      run: |
+        sudo apt-get install libglfw3-dev libglfw3
+
     - name: Build
       run: make all -j4
 
