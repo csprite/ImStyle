@@ -1,4 +1,4 @@
-# ImGooeyStyles
+# ImStyle
 A Small C++ 11 Library To Save &amp; Load ImGui UI Configuration (Colors, Sizes, Etc).
 
 ---
@@ -20,15 +20,6 @@ IMGUI_API void ImGui::SaveStylesTo(const char* fileName);
 ```c++
 IMGUI_API void ImGui::LoadStyleFrom(const char* fileName);
 ```
-
----
-# Building Demo
-
-if you want to see the demo of the library in action, i've provided a demo which you can build & run, it can be used as a tool to modify imgui styles and save them for use later.
-
-1. Clone The Repository Using Git: `git clone https://github.com/pegvin/ImGooeyStyles`
-2. cd into the newly created directory: `cd ImGooeyStyles/`
-3. Build The Demo Using `make`: `make all`
 
 ---
 ## Thanks
